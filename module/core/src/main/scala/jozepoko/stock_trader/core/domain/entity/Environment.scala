@@ -11,6 +11,10 @@ case class ManexLogin(
 )
 
 case class Mysql(
+  kabu: Kabu
+)
+
+case class Kabu(
   user: String,
   password: String,
   host: String,
