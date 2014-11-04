@@ -1,7 +1,7 @@
 package jozepoko.stock_trader.core.domain.repository.dao
 
-import jozepoko.stock_trader.core.infrastructure.mysql.Connection
+import scalikejdbc.async.{ShortenedNames, NamedAsyncDB}
 
-trait MysqlDao extends Dao {
-  protected def session = Connection.session
+trait MysqlDao extends Dao with ShortenedNames {
+  protected def session = NamedAsyncDB('stock).sharedSession
 }

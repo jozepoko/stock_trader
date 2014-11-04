@@ -21,7 +21,6 @@ object Dependencies {
     "org.apache.commons"      % "commons-email"        % "1.3.2",
     "org.apache.commons"      % "commons-compress"     % "1.6",
     "com.github.scopt"        %% "scopt"               % "3.2.0",
-    "com.typesafe.play"       %% "play-json"           % "2.3.4",
     "org.scalikejdbc"         %% "scalikejdbc-async"   % "0.5.+",
     "com.github.mauricio"     %% "postgresql-async"    % "0.2.+",
     "com.github.mauricio"     %% "mysql-async"         % "0.2.+",
