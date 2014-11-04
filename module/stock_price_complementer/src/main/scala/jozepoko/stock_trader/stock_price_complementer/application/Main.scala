@@ -8,10 +8,10 @@ object Main {
     val environment = new Environment()
     println(environment.environment.manexLogin.id)
     println(environment.environment.manexLogin.password)
-    println(environment.environment.mysql.kabu.user)
-    println(environment.environment.mysql.kabu.password)
-    println(environment.environment.mysql.kabu.host)
-    println(environment.environment.mysql.kabu.port)
+    println(environment.environment.mysql.user)
+    println(environment.environment.mysql.password)
+    println(environment.environment.mysql.host)
+    println(environment.environment.mysql.port)
     Connection
   }
 }

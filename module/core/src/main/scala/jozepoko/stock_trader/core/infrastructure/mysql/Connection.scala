@@ -8,9 +8,9 @@ object Connection {
 
   private val SchemeName = "kabu"
 
-  private val kabu = new Environment().environment.mysql.kabu
+  private val mysql = new Environment().environment.mysql
 
-  private val url = s"jdbc:mysql://${kabu.host}:${kabu.port}/$SchemeName?useUnicode=yes&characterEncoding=UTF-8&zeroDateTimeBehavior=exception&tinyInt1isBit=false"
+  private val url = s"jdbc:mysql://${mysql.host}:${mysql.port}/$SchemeName?useUnicode=yes&characterEncoding=UTF-8&zeroDateTimeBehavior=exception&tinyInt1isBit=false"
 
   private val connectionPoolSettings = new ConnectionPoolSettings(
     initialSize = 1,
@@ -22,8 +22,8 @@ object Connection {
   ConnectionPool.add(
     ConnectionName,
     url,
-    kabu.user,
-    kabu.password,
+    mysql.user,
+    mysql.password,
     connectionPoolSettings
   )
 
