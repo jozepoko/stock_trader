@@ -12,6 +12,6 @@ object Main {
     println(environment.environment.mysql.kabu.password)
     println(environment.environment.mysql.kabu.host)
     println(environment.environment.mysql.kabu.port)
-    new Connection()
+    Connection
   }
 }

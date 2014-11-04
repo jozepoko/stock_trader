@@ -1,30 +1,31 @@
 package jozepoko.stock_trader.core.infrastructure.mysql
 
-import jozepoko.stock_trader.core.domain.entity.Mysql
 import jozepoko.stock_trader.core.infrastructure.environment.Environment
 import scalikejdbc._
 
-class Connection(
-  mysqlEnvironment: Mysql = new Environment().environment.mysql
-) {
+object Connection {
   Class.forName("com.mysql.jdbc.Driver")
 
-  val schemeName = "kabu"
+  private val SchemeName = "kabu"
 
-  val kabu = mysqlEnvironment.kabu
+  private val kabu = new Environment().environment.mysql.kabu
 
-  val url = s"jdbc:mysql://${kabu.host}:${kabu.port}/${schemeName}?useUnicode=yes&characterEncoding=UTF-8&zeroDateTimeBehavior=exception&tinyInt1isBit=false"
+  private val url = s"jdbc:mysql://${kabu.host}:${kabu.port}/$SchemeName?useUnicode=yes&characterEncoding=UTF-8&zeroDateTimeBehavior=exception&tinyInt1isBit=false"
 
-  val connectionPoolSettings = new ConnectionPoolSettings(
+  private val connectionPoolSettings = new ConnectionPoolSettings(
     initialSize = 1,
     maxSize = 5
   )
+  
+  private val ConnectionName = "stock"
 
   ConnectionPool.add(
-    "stock",
+    ConnectionName,
     url,
     kabu.user,
     kabu.password,
     connectionPoolSettings
   )
+
+  def session = NamedAutoSession(ConnectionName)
 }

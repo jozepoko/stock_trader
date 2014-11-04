@@ -24,7 +24,7 @@ object Dependencies {
     "org.apache.commons" % "commons-email" % "1.3.2",
     "net.databinder.dispatch" %% "dispatch-core" % "0.11.2",
     "com.github.scopt" %% "scopt" % "3.2.0",
-    "com.typesafe.play" %% "play-json" % "2.2.1"
+    "com.typesafe.play" %% "play-json" % "2.3.4"
   )
 }
 
