@@ -12,4 +12,4 @@ case class MinutelyStockPrice(
   highPrice: Int,
   lowPrice: Int,
   closingPrice: Int
-)
+) extends StockPrice

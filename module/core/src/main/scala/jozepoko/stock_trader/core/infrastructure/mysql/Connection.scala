@@ -11,7 +11,9 @@ object Connection {
   private val host = config.getString("db.default.host")
   private val port = config.getInt("db.default.port")
 
-  private val url = s"jdbc:mysql://$host:$port/$scheme?useUnicode=yes&characterEncoding=UTF-8&zeroDateTimeBehavior=exception&tinyInt1isBit=false"
+  //TODO この書き方ができない。調べろ
+  //private val url = s"jdbc:mysql://$host:$port/$scheme?useUnicode=yes&characterEncoding=UTF-8&zeroDateTimeBehavior=exception&tinyInt1isBit=false"
+  private val url = s"jdbc:mysql://$host:$port/$scheme"
 
   AsyncConnectionPool.add(
     'stock,
@@ -19,4 +21,6 @@ object Connection {
     user,
     password
   )
+
+  val connection = NamedAsyncDB('stock)
 }

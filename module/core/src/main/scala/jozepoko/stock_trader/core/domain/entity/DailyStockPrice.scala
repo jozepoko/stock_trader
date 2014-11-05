@@ -17,4 +17,4 @@ case class DailyStockPrice(
   fiveDaysAverage: Double,
   twentyFiveDaysAverage: Double,
   seventyFiveDaysAverage: Double
-)
+) extends StockPrice

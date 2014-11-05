@@ -61,4 +61,16 @@ class DailyStockPriceDao extends MysqlDao {
         AND market = ${market.id}
     """.map(mapper).single().future
   }
+
+  def delete(datetime: DateTime, code: Int, market: Market)(implicit session: SharedAsyncDBSession = session, cxt: EC = ECGlobal): Future[(DateTime, Int, Market)] = {
+    for {
+      result <- sql"""
+        DELETE FROM daily_stock_price
+        WHERE
+          datetime = $datetime
+          AND code = $code
+          AND market = ${market.id}
+      """.update().future
+    } yield (datetime, code, market)
+  }
 }
