@@ -1,4 +1,4 @@
-package jozepoko.stock_trader.core.domain.service.enum
+package jozepoko.stock_trader.core.domain.service.trade.enum
 
 object MarketEnum {
   case object TousyouIchibu extends Market(1, "東証一部")

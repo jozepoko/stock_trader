@@ -2,7 +2,7 @@ package jozepoko.stock_trader.core.domain.repository.dao
 
 import jozepoko.stock_trader.core.domain.entity.DailyStockPrice
 import jozepoko.stock_trader.core.domain.repository.dao.exception.InvalidMarketException
-import jozepoko.stock_trader.core.domain.service.enum.{MarketEnum, Market}
+import jozepoko.stock_trader.core.domain.service.trade.enum.{MarketEnum, Market}
 import org.joda.time.DateTime
 import scala.concurrent.Future
 import scalikejdbc._, async._

@@ -1,6 +1,6 @@
 package jozepoko.stock_trader.core.domain.entity
 
-import jozepoko.stock_trader.core.domain.service.enum.Market
+import jozepoko.stock_trader.core.domain.service.trade.enum.Market
 import org.joda.time.DateTime
 
 case class DailyStockPrice(
