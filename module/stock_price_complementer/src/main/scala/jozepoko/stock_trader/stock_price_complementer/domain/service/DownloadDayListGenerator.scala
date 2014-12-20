@@ -5,9 +5,17 @@ import jozepoko.stock_trader.stock_price_complementer.domain.repository.dao.Comp
 import jozepoko.stock_trader.stock_price_complementer.domain.service.setting.StockPriceComplementerSettings
 import org.joda.time.DateTime
 
+/**
+ * ダウンロード対象の日のリストを作る処理を持つ。
+ */
 class DownloadDayListGenerator(
   complmenetCompletedDao: ComplementCompletedDao = new ComplementCompletedDao
 ) {
+  /**
+   * ダウンロード対象の日のリストを作る。
+   * ダウンロードがすでに終わった日から30日分がダウンロード対象の日となる。
+   * @return 日のリスト
+   */
   def generate: List[DateTime] = {
     val day = complmenetCompletedDao.find match {
       case Some(v) => v.day
