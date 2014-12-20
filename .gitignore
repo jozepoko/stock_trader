@@ -3,4 +3,5 @@
 target/
 application.conf
 project/project
+data/
 

@@ -1,9 +1,8 @@
 package jozepoko.stock_trader.stock_price_complementer.domain.entity
 
-import jozepoko.stock_trader.stock_price_complementer.domain.service.setting.StockPriceComplementerSettings
-import org.joda.time.DateTime
+import jozepoko.stock_trader.stock_price_complementer.domain.service.enum.Mode
+import jozepoko.stock_trader.stock_price_complementer.domain.service.enum.ModeEnum.BeforeDay
 
 case class Argument(
-  from: DateTime = StockPriceComplementerSettings.StartDateTime,
-  to: DateTime = StockPriceComplementerSettings.EndDateTime
+  mode: Mode = BeforeDay
 )

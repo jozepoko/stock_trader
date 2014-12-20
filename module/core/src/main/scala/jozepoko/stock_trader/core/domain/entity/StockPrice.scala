@@ -8,8 +8,8 @@ trait StockPrice {
   val code: Int
   val market: Market
   val name: String
-  val openingPrice: Int
-  val highPrice: Int
-  val lowPrice: Int
-  val closingPrice: Int
+  val openingPrice: Double
+  val highPrice: Double
+  val lowPrice: Double
+  val closingPrice: Double
 }

@@ -8,8 +8,8 @@ case class FiveMinutelyStockPrice(
   code: Int,
   market: Market,
   name: String,
-  openingPrice: Int,
-  highPrice: Int,
-  lowPrice: Int,
-  closingPrice: Int
+  openingPrice: Double,
+  highPrice: Double,
+  lowPrice: Double,
+  closingPrice: Double
 ) extends StockPrice

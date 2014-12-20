@@ -6,6 +6,24 @@ package object datetime {
   implicit def dateTimeToMyDateTime(dateTime: DateTime): MyDateTime = new MyDateTime(dateTime)
 
   class MyDateTime(val dateTime: DateTime) extends HolidayDistinguisher {
+    /**
+     * 土日、祝日、年末年始以外であればtrueを返す。
+     * @return Boolean
+     */
+    def isTradableDateTime: Boolean = {
+      val isEndOfYear: Boolean = {
+        dateTime.isSameMonthDay(12, 31)
+      }
+
+      val isStartOfYear: Boolean = {
+        dateTime.isSameMonthDay(1, 1) ||
+          dateTime.isSameMonthDay(1, 2) ||
+          dateTime.isSameMonthDay(1, 3)
+      }
+
+      !isEndOfYear && !isStartOfYear && !dateTime.isHoliday
+    }
+
     def getWeek: Week = {
       dateTime.getDayOfWeek match {
         case 1 => WeekEnum.Monday

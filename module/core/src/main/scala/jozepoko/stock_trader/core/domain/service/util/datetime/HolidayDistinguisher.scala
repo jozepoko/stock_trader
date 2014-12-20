@@ -16,7 +16,7 @@ trait HolidayDistinguisher {
   //土日の場合true
   def isWeekEnd: Boolean = {
     dateTime.getWeek match {
-      case WeekEnum.Saturday | WeekEnum.Saturday => true
+      case WeekEnum.Saturday | WeekEnum.Sunday => true
       case _ => false
     }
   }
@@ -48,7 +48,7 @@ trait HolidayDistinguisher {
   def isComingOfAgeDay: Boolean = isSameMonthWeekCount(1, WeekEnum.Monday, 2)
 
   //建国記念日 2月11日
-  def isNationalFoundationDay: Boolean = dateTime.isSameMonthDay(2, 10)
+  def isNationalFoundationDay: Boolean = dateTime.isSameMonthDay(2, 11)
 
   /**
    * 春分の日
@@ -69,7 +69,7 @@ trait HolidayDistinguisher {
    */
   def isVernalEquinoxHoliday: Boolean = {
     val year = dateTime.getYear
-    year == 3 && {
+    dateTime.getMonthOfYear == 3 && {
       val day = year % 4 match {
         case 0 => year match {
           case y if y <= 1956 => 21
@@ -117,7 +117,7 @@ trait HolidayDistinguisher {
   //山の日 8月の11日
   //2016年より施行
   def isMountainDay : Boolean = {
-    dateTime.getYear >= 2016 && isSameMonthWeekCount(8, WeekEnum.Monday, 11)
+    dateTime.getYear >= 2016 && dateTime.isSameMonthDay(8, 11)
   }
 
   //敬老の日 9月の第3月曜日
@@ -141,7 +141,7 @@ trait HolidayDistinguisher {
    */
   def isAutumnEquinoxHoliday: Boolean = {
     val year = dateTime.getYear
-    year == 9 && {
+    dateTime.getMonthOfYear == 9 && {
       val day = year % 4 match {
         case 0 => year match {
           case y if y <= 2008 => 23
@@ -183,9 +183,14 @@ trait HolidayDistinguisher {
   //天皇誕生日 12月23日
   def isEmperorsBirthday: Boolean = dateTime.isSameMonthDay(12, 23)
 
-  //振替休日 祝日が日曜日になった時、代わりにその翌日の月曜日が振替休日となる
+  //振替休日 祝日が日曜日になった時、代わりにその日以降の最初の祝日でない日が振替休日となる
   def isNationalHolidayInLieu: Boolean = {
-    dateTime.getWeek == WeekEnum.Monday && dateTime.minusDays(1).isNationalHoliday
+    def collectConsecutiveNationalHoliday(days: List[DateTime]): List[DateTime] = {
+      val beforeDay = days.head.minusDays(1)
+      if (beforeDay.isNationalHoliday) collectConsecutiveNationalHoliday(beforeDay :: days)
+      else days
+    }
+    dateTime.getWeek != WeekEnum.Sunday && !dateTime.isNationalHoliday && collectConsecutiveNationalHoliday(List(dateTime)).exists(_.getWeek == WeekEnum.Sunday)
   }
 
   //国民の休日 祝日に挟まれた日は祝日となる

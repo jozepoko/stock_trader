@@ -8,13 +8,13 @@ case class DailyStockPrice(
   code: Int,
   market: Market,
   name: String,
-  openingPrice: Int,
-  highPrice: Int,
-  lowPrice: Int,
-  closingPrice: Int,
+  openingPrice: Double,
+  highPrice: Double,
+  lowPrice: Double,
+  closingPrice: Double,
   per: Double,
   pbr: Double,
-  fiveDaysAverage: Double,
-  twentyFiveDaysAverage: Double,
-  seventyFiveDaysAverage: Double
+  fiveDaysPriceAverage: Double,
+  twentyFiveDaysPriceAverage: Double,
+  seventyFiveDaysPriceAverage: Double
 ) extends StockPrice
