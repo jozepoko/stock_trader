@@ -45,7 +45,7 @@ class KDBFileReader(
           columns("売買代金").toLong
         )
       } catch {
-        case NonFatal(e) => println(e) //握りつぶす。TODO どうにかする
+        case NonFatal(e) => //握りつぶす。TODO どうにかする
       }
     }
     fileUtil.delete(file)
@@ -79,7 +79,7 @@ class KDBFileReader(
           columns("売買代金").toLong
         )
       } catch {
-        case NonFatal(e) => println(e) //握りつぶす。TODO どうにかする
+        case NonFatal(e) => //握りつぶす。TODO どうにかする
       }
     }
     //TODO 不要ならファイルを消すようにする
