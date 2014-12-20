@@ -9,9 +9,18 @@ import scala.collection.immutable.ListMap
 import scala.collection.mutable.ListBuffer
 import scala.util.control.NonFatal
 
+/**
+ * 株価データダウンロードサイトからダウンロードしたファイルのリーダー。
+ */
 class KDBFileReader(
   fileUtil: FileUtil = new FileUtil
 ) extends SeparatedValuesReader {
+  /**
+   * ファイルを読み、日足の株価のリストを取得する。
+   *
+   * @param file ダウンロードしたファイル
+   * @return 日足の株価のリスト
+   */
   def readDailyFile(file: File): List[DailyKDBStockPrice] = {
     val list = ListBuffer[DailyKDBStockPrice]()
     super.read(
@@ -42,6 +51,12 @@ class KDBFileReader(
     list.toList
   }
 
+  /**
+   * ファイルを読み、分足、5分足の株価のリストを取得する。
+   *
+   * @param file ダウンロードしたファイル
+   * @return 分足の株価のリスト
+   */
   def readMinutelyFile(file: File): List[MinutelyKDBStockPrice] = {
     val list = ListBuffer[MinutelyKDBStockPrice]()
     super.read(
@@ -71,6 +86,11 @@ class KDBFileReader(
     list.toList
   }
 
+  /**
+   * 株価データダウンロードサイトのファイルの「市場」をパースし、Market型に変換する。
+   * @param m String型の市場
+   * @return Market型の市場
+   */
   def market(m: String): Market = {
     m match {
       case "東証1部" => MarketEnum.TousyouFirst
