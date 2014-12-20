@@ -2,8 +2,6 @@ package jozepoko.stock_trader.stock_price_complementer.domain.service.downloader
 
 import jozepoko.stock_trader.core.domain.entity.{FiveMinutelyStockPrice, MinutelyStockPrice, DailyStockPrice}
 import jozepoko.stock_trader.core.domain.service.util.file.FileUtil
-import jozepoko.stock_trader.core.domain.service.util.html.HtmlParserBuilder
-import jozepoko.stock_trader.core.infrastructure.http._
 import jozepoko.stock_trader.stock_price_complementer.domain.entity.{MinutelyKDBStockPrice, DailyKDBStockPrice, DailyMizStockPrice}
 import jozepoko.stock_trader.stock_price_complementer.domain.repository.{KDBFileReader, MizFileReader}
 import jozepoko.stock_trader.stock_price_complementer.domain.service.KDBMarketParser
@@ -11,17 +9,16 @@ import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
 class StockPriceDownloader(
-  protected val request: Request = new Request,
   kdbFileReader: KDBFileReader = new KDBFileReader,
   mizFileReader: MizFileReader = new MizFileReader,
   kdbMarketParser: KDBMarketParser = new KDBMarketParser,
   fileUtil: FileUtil = new FileUtil,
-  protected val htmlParserBuilder: HtmlParserBuilder = new HtmlParserBuilder
-) extends KDBStockPriceDownloader
-with MizStockPriceDownloader {
+  kdbStockPricecDownloader: KDBStockPriceDownloader = new KDBStockPriceDownloader,
+  mizStockPriceDownloader: MizStockPriceDownloader = new MizStockPriceDownloader
+) {
   def downloadDailyStockPrice(day: DateTime): List[DailyStockPrice] = {
-    val kdbFile = downloadDailyStockPriceFromKDB(day)
-    val mizFile = downloadDailyStockPriceFromMiz(day)
+    val kdbFile = kdbStockPricecDownloader.downloadDailyStockPriceFromKDB(day)
+    val mizFile = mizStockPriceDownloader.downloadDailyStockPriceFromMiz(day)
     val kdbs = kdbFileReader.readDailyFile(kdbFile)
     fileUtil.delete(kdbFile)
     val mizs = mizFileReader.read(mizFile)
@@ -44,12 +41,12 @@ with MizStockPriceDownloader {
       )
     }
 
-    println(downloadStockList)
+    println(kdbStockPricecDownloader.downloadStockListFromKDB)
     for {
-      stock <- downloadStockList
+      stock <- kdbStockPricecDownloader.downloadStockListFromKDB
     } yield {
       Thread.sleep(1000 * 60)
-      val file = downloadFiveMinutelyStockPriceFromKDB(stock.originalCode, day)
+      val file = kdbStockPricecDownloader.downloadFiveMinutelyStockPriceFromKDB(stock.originalCode, day)
       val result = kdbFileReader.readMinutelyFile(file).map(parseMinutelyKDBStockPrice(stock, _))
       fileUtil.delete(file)
       result
@@ -72,9 +69,9 @@ with MizStockPriceDownloader {
     }
 
     for {
-      stock <- downloadStockList
+      stock <- kdbStockPricecDownloader.downloadStockListFromKDB
     } yield{
-      val file = downloadMinutelyStockPriceFromKDB(stock.originalCode, day)
+      val file = kdbStockPricecDownloader.downloadMinutelyStockPriceFromKDB(stock.originalCode, day)
       val result = kdbFileReader.readMinutelyFile(file).map(parseMinutelyKDBStockPrice(stock, _))
       fileUtil.delete(file)
       result

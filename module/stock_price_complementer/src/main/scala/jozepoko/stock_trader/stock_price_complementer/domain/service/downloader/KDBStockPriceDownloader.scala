@@ -7,19 +7,18 @@ import jozepoko.stock_trader.stock_price_complementer.domain.service.setting.Sto
 import org.joda.time.DateTime
 import scala.collection.JavaConverters._
 
-trait KDBStockPriceDownloader {
-  protected val request: Request
-
-  protected val htmlParserBuilder: HtmlParserBuilder
-
-  protected def downloadDailyStockPriceFromKDB(day: DateTime): File = {
+class KDBStockPriceDownloader(
+  request: Request = new Request,
+  htmlParserBuilder: HtmlParserBuilder = new HtmlParserBuilder
+) {
+  def downloadDailyStockPriceFromKDB(day: DateTime): File = {
     val url = s"http://k-db.com/stocks/${day.toString("yyyy-MM-dd")}?download=csv"
     val dailyStockPriceFilePath = s"${StockPriceComplementerSettings.KDBDailyDataDirectoryPath}/kdb_${day.toString("yyyyMMddHHmmss")}.csv"
     val file = new File(dailyStockPriceFilePath)
     request.url(url).download(file)
   }
 
-  def downloadStockList: List[KDBStockUrl] = {
+  def downloadStockListFromKDB: List[KDBStockUrl] = {
     val url = "http://k-db.com/stocks/"
     val response = request.url(url).get()
     val records = htmlParserBuilder(response.boby).getElementById("maintable").getElementsByTag("tr").asScala.toList

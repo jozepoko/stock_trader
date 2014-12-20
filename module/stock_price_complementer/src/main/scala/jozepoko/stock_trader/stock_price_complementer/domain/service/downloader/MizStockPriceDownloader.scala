@@ -5,10 +5,10 @@ import jozepoko.stock_trader.core.infrastructure.http._
 import jozepoko.stock_trader.stock_price_complementer.domain.service.setting.StockPriceComplementerSettings
 import org.joda.time.DateTime
 
-trait MizStockPriceDownloader {
-  protected val request: Request
-
-  protected def downloadDailyStockPriceFromMiz(day: DateTime): File = {
+class MizStockPriceDownloader(
+  request: Request = new Request
+) {
+  def downloadDailyStockPriceFromMiz(day: DateTime): File = {
     val file = new File(filePath(day))
     request.url(createDailyMizUrl(day)).download(file)
   }
