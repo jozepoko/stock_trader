@@ -9,9 +9,17 @@ import jozepoko.stock_trader.stock_price_complementer.domain.service.enum.{Price
 import scala.collection.mutable.ListBuffer
 import scala.util.control.NonFatal
 
+/**
+ * Miz企画からダウンロードしたファイルのリーダー
+ */
 class MizFileReader(
   fileUtil: FileUtil = new FileUtil
 ) extends SeparatedValuesReader {
+  /**
+   * ファイルを読み、株価のリストを取得する
+   * @param file Miz企画のファイル
+   * @return 株価のリスト
+   */
   def read[T](file: File): List[DailyMizStockPrice] = {
     val originalFileName = file.getAbsolutePath
     val newFileName = originalFileName.substring(0, originalFileName.length - 3) + "csv"
@@ -56,6 +64,11 @@ class MizFileReader(
     list.toList
   }
 
+  /**
+   * Miz企画のファイルの「市場」をパースし、Market型に変換する
+   * @param m String型の市場
+   * @return Market型の市場
+   */
   private def market(m: String): Market = {
     m match {
       case "東証1部" => MarketEnum.TousyouFirst
@@ -66,6 +79,11 @@ class MizFileReader(
     }
   }
 
+  /**
+   * Miz企画のファイルの「平均上下」をパースし、PriceUpDown型に変換する
+   * @param u String型の平均上下
+   * @return PriceUpDown型の平均上下
+   */
   private def updown(u: String): PriceUpDown = {
     PriceUpDownEnum.find(u) match {
       case Some(v) => v
