@@ -82,8 +82,7 @@ class KDBFileReader(
         case NonFatal(e) => //握りつぶす。TODO どうにかする
       }
     }
-    //TODO 不要ならファイルを消すようにする
-    //fileUtil.delete(file)
+    fileUtil.delete(file)
     list.toList
   }
 }
