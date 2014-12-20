@@ -9,6 +9,9 @@ import jozepoko.stock_trader.stock_price_complementer.domain.value.KDBStockUrl
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
+/**
+ * 株価をダウンロードする処理を持つ。
+ */
 class StockPriceDownloader(
   kdbFileReader: KDBFileReader = new KDBFileReader,
   mizFileReader: MizFileReader = new MizFileReader,
@@ -17,6 +20,11 @@ class StockPriceDownloader(
   kdbStockPricecDownloader: KDBStockPriceDownloader = new KDBStockPriceDownloader,
   mizStockPriceDownloader: MizStockPriceDownloader = new MizStockPriceDownloader
 ) {
+  /**
+   * 日足の株価をダウンロードする。
+   * @param day 日
+   * @return 株価のリスト
+   */
   def downloadDailyStockPrice(day: DateTime): List[DailyStockPrice] = {
     val kdbFile = kdbStockPricecDownloader.downloadDailyStockPriceFromKDB(day)
     val mizFile = mizStockPriceDownloader.downloadDailyStockPriceFromMiz(day)
@@ -27,6 +35,11 @@ class StockPriceDownloader(
     merge(day, kdbs, mizs)
   }
 
+  /**
+   * 5分足の株価をダウンロードする。
+   * @param day 日
+   * @return 株価のリスト
+   */
   def downloadFiveMinutelyStockPrice(day: DateTime): List[List[FiveMinutelyStockPrice]] = {
     def parseMinutelyKDBStockPrice(kdbStockUrl: KDBStockUrl, minutelyKDBStockPrice: MinutelyKDBStockPrice): FiveMinutelyStockPrice = {
       val dateTime = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm").parseDateTime(s"${minutelyKDBStockPrice.day} ${minutelyKDBStockPrice.time}")
@@ -54,6 +67,11 @@ class StockPriceDownloader(
     }
   }
 
+  /**
+   * 分足の株価をダウンロードする。
+   * @param day 日
+   * @return 株価のリスト
+   */
   def downloadMinutelyStockPrice(day: DateTime): List[List[MinutelyStockPrice]] = {
     def parseMinutelyKDBStockPrice(kdbStockUrl: KDBStockUrl, minutelyKDBStockPrice: MinutelyKDBStockPrice): MinutelyStockPrice = {
       val dateTime = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").parseDateTime(s"${minutelyKDBStockPrice.day} ${minutelyKDBStockPrice.time}")
@@ -79,6 +97,13 @@ class StockPriceDownloader(
     }
   }
 
+  /**
+   * 株価データダウンロードサイトの株価とMiz企画の株価をマージする。
+   * @param day 日
+   * @param kdbs 株価データダウンロードサイトの株価のリスト
+   * @param mizs Miz企画の株価のリスト
+   * @return 株価のリスト
+   */
   private def merge(day: DateTime, kdbs: List[DailyKDBStockPrice], mizs: List[DailyMizStockPrice]): List[DailyStockPrice] = {
     for {
       kdb <- kdbs
