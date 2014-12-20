@@ -55,7 +55,6 @@ class StockPriceDownloader(
       )
     }
 
-    println(kdbStockPricecDownloader.downloadStockListFromKDB)
     for {
       stock <- kdbStockPricecDownloader.downloadStockListFromKDB
     } yield {
