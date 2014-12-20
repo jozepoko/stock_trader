@@ -3,8 +3,9 @@ package jozepoko.stock_trader.stock_price_complementer.domain.entity
 import jozepoko.stock_trader.core.domain.service.trade.enum.Market
 
 /**
- * 株価データダウンロードサイトの、日毎の株価を表すエンティティ。
+ * 株価データダウンロードサイトの、日足の株価を表すエンティティ。
  * idはcode。
+ *
  * @param code 株コード
  * @param market 市場
  * @param name 銘柄名
