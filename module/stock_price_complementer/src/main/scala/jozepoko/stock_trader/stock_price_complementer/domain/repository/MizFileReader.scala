@@ -20,7 +20,7 @@ class MizFileReader(
    * @param file Miz企画のファイル
    * @return 株価のリスト
    */
-  def read[T](file: File): List[DailyMizStockPrice] = {
+  def read(file: File): List[DailyMizStockPrice] = {
     val originalFileName = file.getAbsolutePath
     val newFileName = originalFileName.substring(0, originalFileName.length - 3) + "csv"
     val newFile = fileUtil.unzip(file, new File(newFileName)) match {
