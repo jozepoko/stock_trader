@@ -1,4 +1,4 @@
-package jozepoko.stock_trader.stock_price_complementer.domain.entity
+package jozepoko.stock_trader.stock_price_complementer.domain.value
 
 import jozepoko.stock_trader.stock_price_complementer.domain.service.enum.Mode
 import jozepoko.stock_trader.stock_price_complementer.domain.service.enum.ModeEnum.BeforeDay
