@@ -4,6 +4,7 @@ import java.io.File
 import jozepoko.stock_trader.core.domain.service.util.file.FileUtil
 import jozepoko.stock_trader.core.infrastructure.file.SeparatedValuesReader
 import jozepoko.stock_trader.stock_price_complementer.domain.entity.{MinutelyKDBStockPrice, DailyKDBStockPrice}
+import jozepoko.stock_trader.stock_price_complementer.domain.repository.setting.KDBFileSettings._
 import jozepoko.stock_trader.stock_price_complementer.domain.service.KDBMarketParser
 import scala.collection.immutable.ListMap
 import scala.collection.mutable.ListBuffer
@@ -26,23 +27,23 @@ class KDBFileReader(
     val list = ListBuffer[DailyKDBStockPrice]()
     super.read(
       file.getAbsolutePath,
-      ",",
-      "",
-      "SJIS",
-      2
+      Separator,
+      Enclosure,
+      Encoding,
+      HeaderStartLine
     ) { columns: ListMap[String, String] =>
       try {
         list += DailyKDBStockPrice(
-          columns("コード").take(4).toInt,
-          kdbMarketParser.parse(columns("市場")),
-          columns("銘柄名"),
-          columns("業種"),
-          columns("始値").toDouble,
-          columns("高値").toDouble,
-          columns("安値").toDouble,
-          columns("終値").toDouble,
-          columns("出来高").toLong,
-          columns("売買代金").toLong
+          columns(CodeColumnName).take(CodeLength).toInt,  //コードカラムには不要な文字が入っており、先頭から指定の長さの文字列がコードとなる
+          kdbMarketParser.parse(columns(MarketColumnName)),
+          columns(NameColumnName),
+          columns(BusinessTypeColumnName),
+          columns(OpeningPriceColumnName).toDouble,
+          columns(HighPriceColumnName).toDouble,
+          columns(LowPriceColumnName).toDouble,
+          columns(ClosingPriceColumnNanme).toDouble,
+          columns(TurnoverColumnName).toLong,
+          columns(SalesValueColumnName).toLong
         )
       } catch {
         case NonFatal(e) => //握りつぶす。TODO どうにかする
@@ -62,21 +63,21 @@ class KDBFileReader(
     val list = ListBuffer[MinutelyKDBStockPrice]()
     super.read(
       file.getAbsolutePath,
-      ",",
-      "",
-      "SJIS",
-      2
+      Separator,
+      Enclosure,
+      Encoding,
+      HeaderStartLine
     ) { columns: ListMap[String, String] =>
       try {
         list += MinutelyKDBStockPrice(
-          columns("日付"),
-          columns("時刻"),
-          columns("始値").toDouble,
-          columns("高値").toDouble,
-          columns("安値").toDouble,
-          columns("終値").toDouble,
-          columns("出来高").toLong,
-          columns("売買代金").toLong
+          columns(DayColumnName),
+          columns(TimeColumnName),
+          columns(OpeningPriceColumnName).toDouble,
+          columns(HighPriceColumnName).toDouble,
+          columns(LowPriceColumnName).toDouble,
+          columns(ClosingPriceColumnNanme).toDouble,
+          columns(TurnoverColumnName).toLong,
+          columns(SalesValueColumnName).toLong
         )
       } catch {
         case NonFatal(e) => //握りつぶす。TODO どうにかする
