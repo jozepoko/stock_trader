@@ -1,10 +1,10 @@
 package jozepoko.stock_trader.stock_price_complementer.domain.repository
 
 import java.io.File
-import jozepoko.stock_trader.core.domain.service.trade.enum.{Market, MarketEnum}
 import jozepoko.stock_trader.core.domain.service.util.file.FileUtil
 import jozepoko.stock_trader.core.infrastructure.file.SeparatedValuesReader
 import jozepoko.stock_trader.stock_price_complementer.domain.entity.{MinutelyKDBStockPrice, DailyKDBStockPrice}
+import jozepoko.stock_trader.stock_price_complementer.domain.service.KDBMarketParser
 import scala.collection.immutable.ListMap
 import scala.collection.mutable.ListBuffer
 import scala.util.control.NonFatal
@@ -13,7 +13,8 @@ import scala.util.control.NonFatal
  * 株価データダウンロードサイトからダウンロードしたファイルのリーダー。
  */
 class KDBFileReader(
-  fileUtil: FileUtil = new FileUtil
+  fileUtil: FileUtil = new FileUtil,
+  kdbMarketParser: KDBMarketParser = new KDBMarketParser
 ) extends SeparatedValuesReader {
   /**
    * ファイルを読み、日足の株価のリストを取得する。
@@ -33,7 +34,7 @@ class KDBFileReader(
       try {
         list += DailyKDBStockPrice(
           columns("コード").take(4).toInt,
-          market(columns("市場")),
+          kdbMarketParser.parse(columns("市場")),
           columns("銘柄名"),
           columns("業種"),
           columns("始値").toDouble,
@@ -84,20 +85,5 @@ class KDBFileReader(
     //TODO 不要ならファイルを消すようにする
     //fileUtil.delete(file)
     list.toList
-  }
-
-  /**
-   * 株価データダウンロードサイトのファイルの「市場」をパースし、Market型に変換する。
-   * @param m String型の市場
-   * @return Market型の市場
-   */
-  def market(m: String): Market = {
-    m match {
-      case "東証1部" => MarketEnum.TousyouFirst
-      case "東証2部" => MarketEnum.TousyouSecond
-      case s if s.startsWith("JQ") => MarketEnum.Jasdaq
-      case "東証マザーズ" => MarketEnum.Mothers
-      case _ => MarketEnum.Other
-    }
   }
 }

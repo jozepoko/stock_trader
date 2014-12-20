@@ -5,6 +5,7 @@ import jozepoko.stock_trader.core.domain.service.util.html.HtmlParserBuilder
 import jozepoko.stock_trader.core.infrastructure.http._
 import jozepoko.stock_trader.stock_price_complementer.domain.entity.{MinutelyKDBStockPrice, DailyKDBStockPrice, DailyMizStockPrice}
 import jozepoko.stock_trader.stock_price_complementer.domain.repository.{KDBFileReader, MizFileReader}
+import jozepoko.stock_trader.stock_price_complementer.domain.service.KDBMarketParser
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -12,6 +13,7 @@ class StockPriceDownloader(
   protected val request: Request = new Request,
   kdbFileReader: KDBFileReader = new KDBFileReader,
   mizFileReader: MizFileReader = new MizFileReader,
+  kdbMarketParser: KDBMarketParser = new KDBMarketParser,
   protected val htmlParserBuilder: HtmlParserBuilder = new HtmlParserBuilder
 ) extends KDBStockPriceDownloader
 with MizStockPriceDownloader {
@@ -29,7 +31,7 @@ with MizStockPriceDownloader {
       FiveMinutelyStockPrice(
         dateTime,
         kdbStockUrl.code,
-        kdbFileReader.market(kdbStockUrl.market),
+        kdbMarketParser.parse(kdbStockUrl.market),
         kdbStockUrl.name,
         minutelyKDBStockPrice.openingPrice,
         minutelyKDBStockPrice.highPrice,
@@ -54,7 +56,7 @@ with MizStockPriceDownloader {
       MinutelyStockPrice(
         dateTime,
         kdbStockUrl.code,
-        kdbFileReader.market(kdbStockUrl.market),
+        kdbMarketParser.parse(kdbStockUrl.market),
         kdbStockUrl.name,
         minutelyKDBStockPrice.openingPrice,
         minutelyKDBStockPrice.highPrice,
