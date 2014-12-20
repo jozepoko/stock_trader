@@ -1,6 +1,7 @@
 package jozepoko.stock_trader.stock_price_complementer.domain.service.downloader
 
 import jozepoko.stock_trader.core.domain.entity.{FiveMinutelyStockPrice, MinutelyStockPrice, DailyStockPrice}
+import jozepoko.stock_trader.core.domain.service.util.file.FileUtil
 import jozepoko.stock_trader.core.domain.service.util.html.HtmlParserBuilder
 import jozepoko.stock_trader.core.infrastructure.http._
 import jozepoko.stock_trader.stock_price_complementer.domain.entity.{MinutelyKDBStockPrice, DailyKDBStockPrice, DailyMizStockPrice}
@@ -14,6 +15,7 @@ class StockPriceDownloader(
   kdbFileReader: KDBFileReader = new KDBFileReader,
   mizFileReader: MizFileReader = new MizFileReader,
   kdbMarketParser: KDBMarketParser = new KDBMarketParser,
+  fileUtil: FileUtil = new FileUtil,
   protected val htmlParserBuilder: HtmlParserBuilder = new HtmlParserBuilder
 ) extends KDBStockPriceDownloader
 with MizStockPriceDownloader {
@@ -21,6 +23,7 @@ with MizStockPriceDownloader {
     val kdbFile = downloadDailyStockPriceFromKDB(day)
     val mizFile = downloadDailyStockPriceFromMiz(day)
     val kdbs = kdbFileReader.readDailyFile(kdbFile)
+    fileUtil.delete(kdbFile)
     val mizs = mizFileReader.read(mizFile)
     merge(day, kdbs, mizs)
   }
@@ -46,7 +49,9 @@ with MizStockPriceDownloader {
     } yield {
       Thread.sleep(1000 * 60)
       val file = downloadFiveMinutelyStockPriceFromKDB(stock.originalCode, day)
-      kdbFileReader.readMinutelyFile(file).map(parseMinutelyKDBStockPrice(stock, _))
+      val result = kdbFileReader.readMinutelyFile(file).map(parseMinutelyKDBStockPrice(stock, _))
+      fileUtil.delete(file)
+      result
     }
   }
 
@@ -69,7 +74,9 @@ with MizStockPriceDownloader {
       stock <- downloadStockList
     } yield{
       val file = downloadMinutelyStockPriceFromKDB(stock.originalCode, day)
-      kdbFileReader.readMinutelyFile(file).map(parseMinutelyKDBStockPrice(stock, _))
+      val result = kdbFileReader.readMinutelyFile(file).map(parseMinutelyKDBStockPrice(stock, _))
+      fileUtil.delete(file)
+      result
     }
   }
 

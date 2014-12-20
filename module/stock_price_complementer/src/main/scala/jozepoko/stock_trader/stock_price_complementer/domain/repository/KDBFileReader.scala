@@ -49,7 +49,6 @@ class KDBFileReader(
         case NonFatal(e) => //握りつぶす。TODO どうにかする
       }
     }
-    fileUtil.delete(file)
     list.toList
   }
 
@@ -83,7 +82,6 @@ class KDBFileReader(
         case NonFatal(e) => //握りつぶす。TODO どうにかする
       }
     }
-    fileUtil.delete(file)
     list.toList
   }
 }
