@@ -1,7 +1,7 @@
 package jozepoko.stock_trader.stock_price_complementer.domain.repository.dao
 
 import jozepoko.stock_trader.core.domain.repository.dao.MysqlDao
-import jozepoko.stock_trader.stock_price_complementer.domain.entity.ComplementCompleted
+import jozepoko.stock_trader.stock_price_complementer.domain.value.ComplementCompleted
 import org.joda.time.DateTime
 import scalikejdbc._
 

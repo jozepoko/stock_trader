@@ -1,4 +1,4 @@
-package jozepoko.stock_trader.stock_price_complementer.domain.entity
+package jozepoko.stock_trader.stock_price_complementer.domain.value
 
 import org.joda.time.DateTime
 
