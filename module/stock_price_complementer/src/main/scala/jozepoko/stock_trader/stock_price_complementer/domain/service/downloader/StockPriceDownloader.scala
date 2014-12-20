@@ -5,6 +5,7 @@ import jozepoko.stock_trader.core.domain.service.util.file.FileUtil
 import jozepoko.stock_trader.stock_price_complementer.domain.entity.{MinutelyKDBStockPrice, DailyKDBStockPrice, DailyMizStockPrice}
 import jozepoko.stock_trader.stock_price_complementer.domain.repository.{KDBFileReader, MizFileReader}
 import jozepoko.stock_trader.stock_price_complementer.domain.service.KDBMarketParser
+import jozepoko.stock_trader.stock_price_complementer.domain.value.KDBStockUrl
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 

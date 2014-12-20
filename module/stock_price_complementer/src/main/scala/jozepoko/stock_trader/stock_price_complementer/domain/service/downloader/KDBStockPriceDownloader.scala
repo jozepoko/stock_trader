@@ -4,6 +4,7 @@ import java.io.File
 import jozepoko.stock_trader.core.domain.service.util.html.HtmlParserBuilder
 import jozepoko.stock_trader.core.infrastructure.http._
 import jozepoko.stock_trader.stock_price_complementer.domain.service.setting.StockPriceComplementerSettings
+import jozepoko.stock_trader.stock_price_complementer.domain.value.KDBStockUrl
 import org.joda.time.DateTime
 import scala.collection.JavaConverters._
 
@@ -45,10 +46,3 @@ class KDBStockPriceDownloader(
     request.url(url).download(file)
   }
 }
-
-case class KDBStockUrl(
-  originalCode: String,
-  code: Int,
-  name: String,
-  market: String
-)
