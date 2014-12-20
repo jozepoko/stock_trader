@@ -25,6 +25,7 @@ with MizStockPriceDownloader {
     val kdbs = kdbFileReader.readDailyFile(kdbFile)
     fileUtil.delete(kdbFile)
     val mizs = mizFileReader.read(mizFile)
+    fileUtil.delete(mizFile)
     merge(day, kdbs, mizs)
   }
 

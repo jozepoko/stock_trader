@@ -64,7 +64,6 @@ class MizFileReader(
       }
     }
     fileUtil.delete(newFile)
-    fileUtil.delete(file)
     list.toList
   }
 
