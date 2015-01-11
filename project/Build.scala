@@ -68,4 +68,13 @@ object ApplicationBuild extends Build {
       libraryDependencies ++= dependencies
     )
   ).dependsOn(core)
+
+  lazy val codeTest = Project(
+    id = "code_test",
+    base = file("module/code_test"),
+    settings = Defaults.defaultSettings ++ Seq(
+      resolvers ++= all,
+      libraryDependencies ++= dependencies
+    )
+  ).dependsOn(core)
 }
