@@ -4,6 +4,10 @@ import jozepoko.stock_trader.stock_price_complementer.domain.service.StockPriceC
 
 object Main {
   def main(args: Array[String]): Unit = {
-    new StockPriceComplementer().run(args)
+    try {
+      new StockPriceComplementer().run(args)
+    } finally {
+      sys.exit()
+    }
   }
 }
