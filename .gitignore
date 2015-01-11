@@ -4,4 +4,7 @@ target/
 application.conf
 project/project
 data/
+.vagrant/
+Vagrantfile
+log/
 
