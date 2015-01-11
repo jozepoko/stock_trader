@@ -73,6 +73,12 @@ package object datetime {
     def isSameWeekCount(week: Week, count: Int): Boolean = {
       getWeek == week && getWeekCount == count
     }
+
+    /**
+     * 2015年01月11日(日) のような形式にフォーマットする。
+     * @return String
+     */
+    def formatToJapanese: String = dateTime.toString("yyyy年MM月dd日") + dateTime.getWeek.shortName
   }
 
   object WeekEnum {
