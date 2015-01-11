@@ -9,15 +9,8 @@ import java.io.File
 object MailSettings {
   private val config =  ConfigFactory.parseFile(new File("src/main/resources/application.conf"))
 
-  /** デフォルトの送信元 */
-  val DefaultFrom = config.getString("mail.from")
+  /** デフォルトの送信者名 */
+  val DefaultName = config.getString("mail.name")
 
-  /** デフォルトのホスト */
-  val DefaultHost = config.getString("mail.host")
-
-  /** デフォルトのポート */
-  val DefaultPort = config.getInt("mail.port")
-
-  /** デフォルトの文字コード */
-  val DefaultEncoding = "UTF-8"
+  val DefaultTo = config.getString("mail.to")
 }

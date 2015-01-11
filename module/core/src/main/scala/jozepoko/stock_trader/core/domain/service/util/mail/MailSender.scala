@@ -2,22 +2,20 @@ package jozepoko.stock_trader.core.domain.service.util.mail
 
 import jozepoko.stock_trader.core.domain.service.util.mail.exception.{MailSendFailedException, DestinationNotDefinedException}
 import jozepoko.stock_trader.core.domain.service.util.mail.setting.MailSettings
-import org.apache.commons.mail.SimpleEmail
+import jozepoko.stock_trader.core.domain.service.util.shell.ShellCommandExecutor
 import scala.util.control.NonFatal
 
 /**
  * メール送信を扱うutil。
  */
 class MailSender(
-  var from: String = MailSettings.DefaultFrom,
-  var to: Seq[String] = Nil,
+  var name: String = MailSettings.DefaultName,
+  var to: Seq[String] = List(MailSettings.DefaultTo),
   var cc: Seq[String] = Nil,
   var bcc: Seq[String] = Nil,
   var subject: String = "",
   var message: String = "",
-  var encoding: String = MailSettings.DefaultEncoding,
-  var host: String = MailSettings.DefaultHost,
-  var port: Int = MailSettings.DefaultPort
+  val shellCommandExecutor: ShellCommandExecutor = new ShellCommandExecutor
 ) {
   /**
    * メールを送信する。
@@ -25,16 +23,16 @@ class MailSender(
   def sendMail(): Unit = {
     if (to.isEmpty && cc.isEmpty && bcc.isEmpty) throw new DestinationNotDefinedException("メールの送信先が設定されていませ")
     try {
-      val mail = new SimpleEmail
-      mail.setFrom(from)
-      to.foreach(mail.addTo)
-      cc.foreach(mail.addCc)
-      bcc.foreach(mail.addBcc)
-      mail.setSubject(subject)
-      mail.setMsg(message)
-      mail.setHostName(host)
-      mail.setSmtpPort(port)
-      mail.setCharset(encoding)
+      val echoCommand = s"""echo -e "$message" """
+      val emailCommand = new StringBuilder
+      emailCommand.append(s"""email -b -s "$subject" -n "$name" """)
+      if (cc.nonEmpty) emailCommand.append(s"-cc ${cc.mkString(",")}")
+      if (bcc.nonEmpty) emailCommand.append(s"-bcc ${bcc.mkString(",")}")
+      if (to.nonEmpty) emailCommand.append(to.mkString("\"", "\", \"", "\""))
+      shellCommandExecutor.sendMail(echoCommand, emailCommand.result()) match {
+        case Left(e) => throw new Exception(e)
+        case _ =>  //何もしない
+      }
     } catch {
       case NonFatal(e) => throw new MailSendFailedException(s"メールの送信に失敗しました。エラーメッセージ : ${e.getMessage}")
     }
@@ -42,10 +40,10 @@ class MailSender(
 
   /**
    * 送信元を変更する。
-   * @param f 送信先
+   * @param n 送信先
    */
-  def from(f: String): MailSender = {
-    from = f
+  def name(n: String): MailSender = {
+    name = n
     this
   }
 
@@ -118,33 +116,6 @@ class MailSender(
    */
   def message(m: String): MailSender = {
     message = m
-    this
-  }
-
-  /**
-   * 文字コードを変更する。
-   * @param e 文字コード
-   */
-  def encoding(e: String): MailSender = {
-    encoding = e
-    this
-  }
-  
-  /**
-   * ホストを変更する。
-   * @param h ホスト
-   */
-  def host(h: String): MailSender = {
-    host = h
-    this
-  }
-
-  /**
-   * ポートを変更する。
-   * @param p ポート
-   */
-  def port(p: Int): MailSender = {
-    port = p
     this
   }
 }
