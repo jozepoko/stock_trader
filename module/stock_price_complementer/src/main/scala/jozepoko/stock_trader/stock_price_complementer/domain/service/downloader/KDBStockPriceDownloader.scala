@@ -73,7 +73,7 @@ class KDBStockPriceDownloader(
    * @return url
    */
   private def createDailyUrl(day: DateTime): String = {
-    s"$BaseUrl${day.toString("yyyy-MM-dd")}&$DownloadParameter"
+    s"$BaseUrl${day.toString("yyyy-MM-dd")}?$DownloadParameter"
   }
 
   /**
