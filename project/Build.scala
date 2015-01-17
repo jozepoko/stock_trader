@@ -15,9 +15,10 @@ object Dependencies {
     "org.joda"                % "joda-convert"         % "1.2",
     "mysql"                   % "mysql-connector-java" % "5.1.6",
     "ch.qos.logback"          % "logback-classic"      % "1.1.2",
+    "org.specs2"              %% "specs2-core"         % "2.4.13" % "test",
+    "org.specs2"              %% "specs2-mock"         % "2.4.13" % "test",
     "org.mockito"             % "mockito-core"         % "1.9.5" % "test",
     "commons-io"              % "commons-io"           % "2.4",
-    "org.specs2"              %% "specs2-core"         % "2.4.13" % "test",
     "org.apache.commons"      % "commons-email"        % "1.3.2",
     "org.apache.commons"      % "commons-compress"     % "1.6",
     "com.github.scopt"        %% "scopt"               % "3.2.0",
@@ -67,7 +68,7 @@ object ApplicationBuild extends Build {
       resolvers ++= all,
       libraryDependencies ++= dependencies
     )
-  ).dependsOn(core)
+  ).dependsOn(core  % "compile->compile;test->test")
 
   lazy val codeTest = Project(
     id = "code_test",
