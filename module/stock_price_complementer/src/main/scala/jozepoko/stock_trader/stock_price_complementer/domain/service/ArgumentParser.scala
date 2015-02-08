@@ -2,9 +2,7 @@ package jozepoko.stock_trader.stock_price_complementer.domain.service
 
 import jozepoko.stock_trader.stock_price_complementer.domain.service.enum.ModeEnum
 import jozepoko.stock_trader.stock_price_complementer.domain.service.exception.InvalidArgumentException
-import jozepoko.stock_trader.stock_price_complementer.domain.service.setting.StockPriceComplementerSettings
 import jozepoko.stock_trader.stock_price_complementer.domain.value.Argument
-import org.joda.time.format.DateTimeFormat
 
 object ArgumentParser {
   def parse(args: Array[String]):  Argument = {
