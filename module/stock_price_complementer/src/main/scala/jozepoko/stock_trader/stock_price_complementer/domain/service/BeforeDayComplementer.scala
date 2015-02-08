@@ -63,6 +63,8 @@ class BeforeDayComplementer(
       Right(s"${yesterDay.formatToJapanese} の${name}の株価の補完が完了しました。")
     } catch {
       case NonFatal(e) =>
+        println(e.getMessage)
+        println(e.getStackTrace)
         Left(
         s"""yesterDay.formatToJapanese} の${name}の株価の補完に失敗しました。今日中に実行しなおしてください。
              |原因 : ${e.getMessage}
