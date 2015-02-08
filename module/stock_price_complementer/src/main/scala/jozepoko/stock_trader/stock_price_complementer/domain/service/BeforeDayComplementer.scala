@@ -1,6 +1,7 @@
 package jozepoko.stock_trader.stock_price_complementer.domain.service
 
 import jozepoko.stock_trader.core.domain.service.util.datetime._
+import jozepoko.stock_trader.core.domain.service.util.exception._
 import jozepoko.stock_trader.core.domain.repository.dao.{MinutelyStockPriceDao, FiveMinutelyStockPriceDao}
 import jozepoko.stock_trader.core.infrastructure.mysql.Connection
 import jozepoko.stock_trader.stock_price_complementer.domain.service.downloader.StockPriceDownloader
@@ -61,9 +62,13 @@ class BeforeDayComplementer(
       download
       Right(s"${yesterDay.formatToJapanese} の${name}の株価の補完が完了しました。")
     } catch {
-      case NonFatal(e) => Left(
+      case NonFatal(e) =>
+        Left(
         s"""yesterDay.formatToJapanese} の${name}の株価の補完に失敗しました。今日中に実行しなおしてください。
              |原因 : ${e.getMessage}
+             |ローカライズメッセージ : ${e.getLocalizedMessage}
+             |スタックトレース :
+             |${getStackTraceString(e)}
            """.stripMargin
       )
     }
