@@ -58,7 +58,7 @@ class StockPriceDownloader(
     for {
       stock <- kdbStockPricecDownloader.downloadStockListFromKDB
     } yield {
-      Thread.sleep(1000 * 60)  // 60秒
+      Thread.sleep(1000 * 120)  // 120秒
       val file = kdbStockPricecDownloader.downloadFiveMinutelyStockPriceFromKDB(stock.originalCode, day)
       val result = kdbFileReader.readMinutelyFile(file).map(parseMinutelyKDBStockPrice(stock, _))
       fileUtil.delete(file)
@@ -89,7 +89,7 @@ class StockPriceDownloader(
     for {
       stock <- kdbStockPricecDownloader.downloadStockListFromKDB
     } yield{
-      Thread.sleep(1000 * 60)  // 60秒
+      Thread.sleep(1000 * 120)  // 120秒
       val file = kdbStockPricecDownloader.downloadMinutelyStockPriceFromKDB(stock.originalCode, day)
       val result = kdbFileReader.readMinutelyFile(file).map(parseMinutelyKDBStockPrice(stock, _))
       fileUtil.delete(file)
