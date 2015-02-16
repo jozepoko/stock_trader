@@ -1,5 +1,6 @@
 package jozepoko.stock_trader.stock_price_complementer.domain.service.downloader
 
+import java.io.File
 import jozepoko.stock_trader.core.domain.entity.{FiveMinutelyStockPrice, MinutelyStockPrice, DailyStockPrice}
 import jozepoko.stock_trader.core.domain.service.util.file.FileUtil
 import jozepoko.stock_trader.stock_price_complementer.domain.entity.{MinutelyKDBStockPrice, DailyKDBStockPrice, DailyMizStockPrice}
@@ -8,6 +9,7 @@ import jozepoko.stock_trader.stock_price_complementer.domain.service.KDBMarketPa
 import jozepoko.stock_trader.stock_price_complementer.domain.value.KDBStockUrl
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import scala.util.control.NonFatal
 
 /**
  * 株価をダウンロードする処理を持つ。
@@ -59,7 +61,7 @@ class StockPriceDownloader(
       stock <- kdbStockPricecDownloader.downloadStockListFromKDB
     } yield {
       Thread.sleep(1000 * 120)  // 120秒
-      val file = kdbStockPricecDownloader.downloadFiveMinutelyStockPriceFromKDB(stock.originalCode, day)
+      val file = tryDownloadTenTimes(stock.originalCode, day, kdbStockPricecDownloader.downloadFiveMinutelyStockPriceFromKDB)
       val result = kdbFileReader.readMinutelyFile(file).map(parseMinutelyKDBStockPrice(stock, _))
       fileUtil.delete(file)
       result
@@ -90,7 +92,7 @@ class StockPriceDownloader(
       stock <- kdbStockPricecDownloader.downloadStockListFromKDB
     } yield{
       Thread.sleep(1000 * 120)  // 120秒
-      val file = kdbStockPricecDownloader.downloadMinutelyStockPriceFromKDB(stock.originalCode, day)
+      val file = tryDownloadTenTimes(stock.originalCode, day, kdbStockPricecDownloader.downloadMinutelyStockPriceFromKDB)
       val result = kdbFileReader.readMinutelyFile(file).map(parseMinutelyKDBStockPrice(stock, _))
       fileUtil.delete(file)
       result
@@ -124,5 +126,25 @@ class StockPriceDownloader(
       miz.twentyFiveDaysPriceAverage,
       miz.seventyFiveDaysPriceAverage
     )
+  }
+
+  /**
+   * 10回ダウンロードしようとするやつ。
+   * @param code 株コード
+   * @param day 対象の日時
+   * @param downloader ダウンロードするメソッド
+   * @param count 現在の試行回数
+   * @return ダウンロードしたファイル
+   */
+  private def tryDownloadTenTimes(code: String, day: DateTime, downloader: (String, DateTime) => File, count: Int = 0): File = {
+    try {
+      downloader(code, day)
+    } catch {
+      case NonFatal(e) =>
+        if (count < 10) {
+          Thread.sleep(1000 * 300)  // 300秒
+          tryDownloadTenTimes(code, day, downloader, count + 1)
+        } else throw e
+    }
   }
 }
