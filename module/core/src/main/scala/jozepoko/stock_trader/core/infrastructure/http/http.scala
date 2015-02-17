@@ -1,8 +1,10 @@
 package jozepoko.stock_trader.core.infrastructure
 
 import java.io.{FileOutputStream, BufferedOutputStream, File}
+import jozepoko.stock_trader.core.infrastructure.exception.HttpRequestFailureException
 import jozepoko.stock_trader.core.infrastructure.http.enum.Method
 import jozepoko.stock_trader.core.infrastructure.http.enum.MethodEnum.GET
+import scala.util.control.NonFatal
 import scalaj.http.{HttpOptions, Http}
 
 package object http {
@@ -39,13 +41,26 @@ package object http {
         case Some(v) => request.headers(v :: request.headers)
         case None    => request
       }
-      val (statusCode, header, body) = request.options(HttpOptions.connTimeout(connTimeoutMs), HttpOptions.readTimeout(readTimeoutMs)).asHeadersAndParse(Http.readString)
-      Response(statusCode, header, body)
+      try {
+        val (statusCode, header, body) = request.options(HttpOptions.connTimeout(connTimeoutMs), HttpOptions.readTimeout(readTimeoutMs)).asHeadersAndParse(Http.readString)
+        Response(statusCode, header, body)
+      } catch {
+        case NonFatal(e) =>
+          throw new HttpRequestFailureException(
+            s"""httpリクエストに失敗しました。
+               |url: $url
+               |method: ${method.value}
+               |headers: $headers
+               |parameters: $parameters
+               |contentType: $contentType
+               |エラーメッセージ: ${e.getMessage}
+             """.stripMargin,
+            e
+          )
+      }
     }
 
     def download(file: File): File = {
-      println("///////////////////")
-      println(url)
       val bytes = Http(url).options(HttpOptions.connTimeout(connTimeoutMs), HttpOptions.readTimeout(readTimeoutMs)).asBytes
       val writer = new BufferedOutputStream(new FileOutputStream(file))
       for (b <- bytes) writer.write(b)
