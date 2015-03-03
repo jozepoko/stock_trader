@@ -40,7 +40,7 @@ class MinutelyStockPriceDao extends MysqlDao {
   }
 
   def replaces(minutelyStockPrices: List[MinutelyStockPrice])(implicit session: DBSession = session): List[MinutelyStockPrice] = {
-    val sql = s"""REPLACE INTO five_minutely_stock_price VALUES
+    val sql = s"""REPLACE INTO minutely_stock_price VALUES
       |${minutelyStockPrices.map { minutelyStockPrice =>
       s"""('${minutelyStockPrice.datetime.toString("yyyy-MM-dd HH:mm:ss")}',
            |'${minutelyStockPrice.code}',
@@ -50,7 +50,7 @@ class MinutelyStockPriceDao extends MysqlDao {
            |'${minutelyStockPrice.highPrice}',
            |'${minutelyStockPrice.lowPrice}',
            |'${minutelyStockPrice.closingPrice}'
-           |""".stripMargin
+           |)""".stripMargin
     }.mkString(",")}
       |
     """.stripMargin

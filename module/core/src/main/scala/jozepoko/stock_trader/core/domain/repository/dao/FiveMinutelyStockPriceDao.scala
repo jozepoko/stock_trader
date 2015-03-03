@@ -51,7 +51,7 @@ class FiveMinutelyStockPriceDao extends MysqlDao {
              |'${fiveMinutelyStockPrice.highPrice}',
              |'${fiveMinutelyStockPrice.lowPrice}',
              |'${fiveMinutelyStockPrice.closingPrice}'
-             |""".stripMargin
+             |)""".stripMargin
           }.mkString(",")}
         |
       """.stripMargin
