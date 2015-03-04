@@ -142,6 +142,7 @@ class StockPriceDownloader(
     } catch {
       case NonFatal(e) =>
         if (count < 10) {
+          println(s"${count + 1}回失敗...")
           Thread.sleep(1000 * 300)  // 300秒
           tryDownloadTenTimes(code, day, downloader, count + 1)
         } else throw e
