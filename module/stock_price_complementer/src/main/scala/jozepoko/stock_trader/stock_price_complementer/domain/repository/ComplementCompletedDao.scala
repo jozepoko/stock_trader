@@ -1,4 +1,4 @@
-package jozepoko.stock_trader.stock_price_complementer.domain.repository.dao
+package jozepoko.stock_trader.stock_price_complementer.domain.repository
 
 import jozepoko.stock_trader.core.domain.repository.dao.MysqlDao
 import jozepoko.stock_trader.stock_price_complementer.domain.value.ComplementCompleted

@@ -3,7 +3,7 @@ package jozepoko.stock_trader.stock_price_complementer.domain.service
 import jozepoko.stock_trader.core.domain.repository.dao.DailyStockPriceDao
 import jozepoko.stock_trader.core.domain.service.util.datetime._
 import jozepoko.stock_trader.core.infrastructure.mysql.Connection
-import jozepoko.stock_trader.stock_price_complementer.domain.repository.dao.ComplementCompletedDao
+import jozepoko.stock_trader.stock_price_complementer.domain.repository.ComplementCompletedDao
 import jozepoko.stock_trader.stock_price_complementer.domain.service.downloader.StockPriceDownloader
 import org.joda.time.DateTime
 import scala.util.control.NonFatal
