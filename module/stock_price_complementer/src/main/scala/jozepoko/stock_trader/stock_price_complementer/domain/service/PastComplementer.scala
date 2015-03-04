@@ -2,20 +2,18 @@ package jozepoko.stock_trader.stock_price_complementer.domain.service
 
 import jozepoko.stock_trader.core.domain.repository.dao.DailyStockPriceDao
 import jozepoko.stock_trader.core.domain.service.util.datetime._
-import jozepoko.stock_trader.core.infrastructure.mysql.Connection
+import jozepoko.stock_trader.core.infrastructure.mysql.MixInStockConnectionPool
 import jozepoko.stock_trader.stock_price_complementer.domain.repository.ComplementCompletedDao
 import jozepoko.stock_trader.stock_price_complementer.domain.service.downloader.StockPriceDownloader
 import org.joda.time.DateTime
 import scala.util.control.NonFatal
-import scalikejdbc.DBConnection
 
 class PastComplementer(
   downloadDayListGenerator: DownloadDayListGenerator = new DownloadDayListGenerator,
   stockPriceDownloader: StockPriceDownloader = new StockPriceDownloader,
-  connection: DBConnection = Connection.connection,
   dailyStockPriceDao: DailyStockPriceDao = new DailyStockPriceDao,
   complementCompletedDao: ComplementCompletedDao = new ComplementCompletedDao
-) {
+) extends MixInStockConnectionPool {
   def complementPast(): (String, String) = {
     val dayList = downloadDayListGenerator.generate
     val firstDay = dayList.head
@@ -50,7 +48,7 @@ class PastComplementer(
     try {
       val stockPrices = stockPriceDownloader.downloadDailyStockPrice(day)
       stockPrices.grouped(1000).map { groupedStockPrices =>
-        connection localTx { implicit session =>
+        stockConnectionPool.borrow localTx { implicit session =>
           dailyStockPriceDao.replaces(groupedStockPrices)
         }
         Thread.sleep(1000 * 1)  // sqlの実行を1秒待つ

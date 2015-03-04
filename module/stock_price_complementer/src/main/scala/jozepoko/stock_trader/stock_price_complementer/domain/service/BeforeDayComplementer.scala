@@ -3,18 +3,16 @@ package jozepoko.stock_trader.stock_price_complementer.domain.service
 import jozepoko.stock_trader.core.domain.service.util.datetime._
 import jozepoko.stock_trader.core.domain.service.util.exception._
 import jozepoko.stock_trader.core.domain.repository.dao.{MinutelyStockPriceDao, FiveMinutelyStockPriceDao}
-import jozepoko.stock_trader.core.infrastructure.mysql.Connection
+import jozepoko.stock_trader.core.infrastructure.mysql.MixInStockConnectionPool
 import jozepoko.stock_trader.stock_price_complementer.domain.service.downloader.StockPriceDownloader
 import org.joda.time.DateTime
 import scala.util.control.NonFatal
-import scalikejdbc.DBConnection
 
 class BeforeDayComplementer(
   stockPriceDownloader: StockPriceDownloader = new StockPriceDownloader,
-  connection: DBConnection = Connection.connection,
   fiveMinutelyStockPriceDao: FiveMinutelyStockPriceDao = new FiveMinutelyStockPriceDao,
   minutelyStockPriceDao: MinutelyStockPriceDao = new MinutelyStockPriceDao
-) {
+) extends MixInStockConnectionPool {
   def complementBeforeDay(): (String, String) = {
     val yesterDay = DateTime.now.minusDays(1).withTime(0, 0, 0, 0)
     if (yesterDay.isTradableDateTime) {
@@ -40,7 +38,7 @@ class BeforeDayComplementer(
   private[this] def complementFiveMintutes(yesterDay: DateTime): Either[String, String] = {
     complement(yesterDay, "5分足", {
       stockPriceDownloader.downloadFiveMinutelyStockPrice(yesterDay) foreach { fiveMinutelyEntityList =>
-        connection localTx { implicit session =>
+        stockConnectionPool.borrow localTx { implicit session =>
           fiveMinutelyStockPriceDao.replaces(fiveMinutelyEntityList)
         }
       }
@@ -50,7 +48,7 @@ class BeforeDayComplementer(
   private[this] def complementMinutes(yesterDay: DateTime): Either[String, String] = {
     complement(yesterDay, "分足" , {
       stockPriceDownloader.downloadMinutelyStockPrice(yesterDay) foreach { minutelyEntityList =>
-        connection localTx { implicit session =>
+        stockConnectionPool.borrow localTx { implicit session =>
           minutelyStockPriceDao.replaces(minutelyEntityList)
         }
       }
