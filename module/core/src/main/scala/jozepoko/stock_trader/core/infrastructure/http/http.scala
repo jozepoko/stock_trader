@@ -42,8 +42,11 @@ package object http {
         case None    => request
       }
       try {
+        println(url)
         val (statusCode, header, body) = request.options(HttpOptions.connTimeout(connTimeoutMs), HttpOptions.readTimeout(readTimeoutMs)).asHeadersAndParse(Http.readString)
-        Response(statusCode, header, body)
+        val result = Response(statusCode, header, body)
+        println(result.boby)
+        result
       } catch {
         case NonFatal(e) =>
           throw new HttpRequestFailureException(
@@ -61,6 +64,7 @@ package object http {
     }
 
     def download(file: File): File = {
+      println(url)
       val bytes = Http(url).options(HttpOptions.connTimeout(connTimeoutMs), HttpOptions.readTimeout(readTimeoutMs)).asBytes
       val writer = new BufferedOutputStream(new FileOutputStream(file))
       for (b <- bytes) writer.write(b)
