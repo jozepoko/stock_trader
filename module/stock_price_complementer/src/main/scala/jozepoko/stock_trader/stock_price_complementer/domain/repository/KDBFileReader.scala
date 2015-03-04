@@ -10,6 +10,14 @@ import scala.collection.immutable.ListMap
 import scala.collection.mutable.ListBuffer
 import scala.util.control.NonFatal
 
+trait UsesKDBFileReader {
+  def kdbFileReader: KDBFileReader
+}
+
+trait MixInKDBFileReader extends UsesKDBFileReader {
+  val kdbFileReader: KDBFileReader = new KDBFileReader
+}
+
 /**
  * 株価データダウンロードサイトからダウンロードしたファイルのリーダー。
  */
