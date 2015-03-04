@@ -3,9 +3,8 @@ import Keys._
 
 object BuildSettings {
   val buildSettings = Defaults.defaultSettings ++ Seq(
-    name := "stcok_trader",
     version := "1.0",
-    scalaVersion := "2.10.4"
+    scalaVersion := "2.11.4"
   )
 }
 
@@ -48,24 +47,28 @@ object ApplicationBuild extends Build {
     id = "stock_trader",
     base = file("."),
     settings = buildSettings ++ Seq(
+      name := "stcok_trader",
       resolvers ++= all,
       libraryDependencies ++= dependencies
     )
-  ).aggregate(core, stockPriceComplementer)
+  ).aggregate(core, stockPriceComplementer, codeTest, deepLearning)
 
   lazy val core = Project(
     id = "core",
     base = file("module/core"),
-    settings = Defaults.defaultSettings ++ Seq(
+    settings = buildSettings ++ Seq(
+      name := "core",
       resolvers ++= all,
-      libraryDependencies ++= dependencies
+      libraryDependencies ++= dependencies,
+      initialize in Test := System.setProperty("isInTest", "true")
     )
   )
 
   lazy val stockPriceComplementer = Project(
     id = "stock_price_complementer",
     base = file("module/stock_price_complementer"),
-    settings = Defaults.defaultSettings ++ Seq(
+    settings = buildSettings ++ Seq(
+      name := "stock_price_complementer",
       resolvers ++= all,
       libraryDependencies ++= dependencies
     )
@@ -74,7 +77,18 @@ object ApplicationBuild extends Build {
   lazy val codeTest = Project(
     id = "code_test",
     base = file("module/code_test"),
-    settings = Defaults.defaultSettings ++ Seq(
+    settings = buildSettings ++ Seq(
+      name := "code_test",
+      resolvers ++= all,
+      libraryDependencies ++= dependencies
+    )
+  ).dependsOn(core)
+
+  lazy val deepLearning = Project(
+    id = "deep_learning",
+    base = file("module/deep_learning"),
+    settings = buildSettings ++ Seq(
+      name := "deep_learning",
       resolvers ++= all,
       libraryDependencies ++= dependencies
     )
