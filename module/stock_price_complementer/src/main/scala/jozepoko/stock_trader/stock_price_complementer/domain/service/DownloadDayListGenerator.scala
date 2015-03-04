@@ -2,7 +2,7 @@ package jozepoko.stock_trader.stock_price_complementer.domain.service
 
 import jozepoko.stock_trader.core.domain.service.util.datetime._
 import jozepoko.stock_trader.stock_price_complementer.domain.repository.dao.ComplementCompletedDao
-import jozepoko.stock_trader.stock_price_complementer.domain.service.setting.StockPriceComplementerSettings
+import jozepoko.stock_trader.stock_price_complementer.domain.service.setting.MixInStockPriceComplementerSettings
 import org.joda.time.DateTime
 
 /**
@@ -10,7 +10,7 @@ import org.joda.time.DateTime
  */
 class DownloadDayListGenerator(
   complmenetCompletedDao: ComplementCompletedDao = new ComplementCompletedDao
-) {
+) extends MixInStockPriceComplementerSettings {
   /**
    * ダウンロード対象の日のリストを作る。
    * ダウンロードがすでに終わった日から30日分がダウンロード対象の日となる。
@@ -19,7 +19,7 @@ class DownloadDayListGenerator(
   def generate: List[DateTime] = {
     val day = complmenetCompletedDao.find match {
       case Some(v) => v.day
-      case None => StockPriceComplementerSettings.StartDateTime
+      case None => stockPriceComplementerSettings.StartDateTime
     }
     collectTradableDays(day).take(30).toList
   }

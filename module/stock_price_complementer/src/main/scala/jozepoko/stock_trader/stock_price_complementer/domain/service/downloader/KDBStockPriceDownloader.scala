@@ -4,7 +4,7 @@ import java.io.File
 import jozepoko.stock_trader.core.domain.service.util.html.HtmlParserBuilder
 import jozepoko.stock_trader.core.infrastructure.http._
 import jozepoko.stock_trader.stock_price_complementer.domain.service.downloader.setting.KDBStockPriceDownloaderSettings._
-import jozepoko.stock_trader.stock_price_complementer.domain.service.setting.StockPriceComplementerSettings
+import jozepoko.stock_trader.stock_price_complementer.domain.service.setting.MixInStockPriceComplementerSettings
 import jozepoko.stock_trader.stock_price_complementer.domain.value.KDBStockUrl
 import org.joda.time.DateTime
 import scala.collection.JavaConverters._
@@ -15,14 +15,14 @@ import scala.collection.JavaConverters._
 class KDBStockPriceDownloader(
   request: Request = new Request,
   htmlParserBuilder: HtmlParserBuilder = new HtmlParserBuilder
-) {
+) extends MixInStockPriceComplementerSettings {
   /**
    * 指定した日の日足の株価一覧をダウンロードする。
    * @param day 日
    * @return ダウンロードしたファイル
    */
   def downloadDailyStockPriceFromKDB(day: DateTime): File = {
-    val dailyStockPriceFilePath = s"${StockPriceComplementerSettings.KDBDailyDataDirectoryPath}/kdb_${day.toString("yyyyMMddHHmmss")}.csv"
+    val dailyStockPriceFilePath = s"${stockPriceComplementerSettings.KDBDailyDataDirectoryPath}/kdb_${day.toString("yyyyMMddHHmmss")}.csv"
     val file = new File(dailyStockPriceFilePath)
     request.url(createDailyUrl(day)).download(file)
   }
@@ -52,7 +52,7 @@ class KDBStockPriceDownloader(
    * @return ダウンロードしたファイル
    */
   def downloadFiveMinutelyStockPriceFromKDB(originalCode: String, day: DateTime): File = {
-    val file = new File(s"${StockPriceComplementerSettings.KDBFiveMinutelyDataDirectoryPath}/kdb_${originalCode}_${day.toString("yyyyMMddHHmmss")}.csv")
+    val file = new File(s"${stockPriceComplementerSettings.KDBFiveMinutelyDataDirectoryPath}/kdb_${originalCode}_${day.toString("yyyyMMddHHmmss")}.csv")
     request.url(createFiveMinutelyUrl(originalCode, day)).download(file)
   }
 
@@ -63,7 +63,7 @@ class KDBStockPriceDownloader(
    * @return ダウンロードしたファイル
    */
   def downloadMinutelyStockPriceFromKDB(originalCode: String, day: DateTime): File = {
-    val file = new File(s"${StockPriceComplementerSettings.KDBMinutelyDataDirectoryPath}/kdb_${originalCode}_${day.toString("yyyyMMddHHmmss")}.csv")
+    val file = new File(s"${stockPriceComplementerSettings.KDBMinutelyDataDirectoryPath}/kdb_${originalCode}_${day.toString("yyyyMMddHHmmss")}.csv")
     request.url(createMinutelyUrl(originalCode, day)).download(file)
   }
 

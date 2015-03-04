@@ -2,7 +2,7 @@ package jozepoko.stock_trader.stock_price_complementer.domain.service.downloader
 
 import java.io.File
 import jozepoko.stock_trader.core.infrastructure.http._
-import jozepoko.stock_trader.stock_price_complementer.domain.service.setting.StockPriceComplementerSettings
+import jozepoko.stock_trader.stock_price_complementer.domain.service.setting.MixInStockPriceComplementerSettings
 import org.joda.time.DateTime
 
 /**
@@ -10,7 +10,7 @@ import org.joda.time.DateTime
  */
 class MizStockPriceDownloader(
   request: Request = new Request
-) {
+) extends MixInStockPriceComplementerSettings {
   /**
    * Miz企画から日足の株価をダウンロードする処理を持つ。
    * @param day 日
@@ -37,6 +37,6 @@ class MizStockPriceDownloader(
    * @return パス
    */
   private def filePath(day: DateTime): String = {
-    s"${StockPriceComplementerSettings.MizDataDirectoryPath}/miz_${day.toString("yyyyMMddHHmmss")}.zip"
+    s"${stockPriceComplementerSettings.MizDataDirectoryPath}/miz_${day.toString("yyyyMMddHHmmss")}.zip"
   }
 }
