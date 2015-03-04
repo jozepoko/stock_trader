@@ -3,11 +3,11 @@ package jozepoko.stock_trader.core.domain.repository.dao
 import jozepoko.stock_trader.core.domain.entity.MinutelyStockPrice
 import jozepoko.stock_trader.core.domain.service.trade.enum.{Market, MarketEnum}
 import jozepoko.stock_trader.core.infrastructure.mysql.Connection
-import jozepoko.stock_trader.test.TestBase
+import jozepoko.stock_trader.test.Specs2TestBase
 import org.joda.time.DateTime
 import scalikejdbc._
 
-class MinutelyStockPriceDaoSpec extends TestBase {
+class MinutelyStockPriceDaoSpec extends Specs2TestBase {
   val minutelyStockPriceDao = new MinutelyStockPriceDao
 
   "MinutelyStockPriceDao" should {

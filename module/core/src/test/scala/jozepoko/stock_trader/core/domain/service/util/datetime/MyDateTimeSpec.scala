@@ -1,9 +1,9 @@
 package jozepoko.stock_trader.core.domain.service.util.datetime
 
-import jozepoko.stock_trader.test.TestBase
+import jozepoko.stock_trader.test.Specs2TestBase
 import org.joda.time.DateTime
 
-class MyDateTimeSpec extends TestBase {
+class MyDateTimeSpec extends Specs2TestBase {
   "HolidayDistinguisher" should {
     "土曜日の判定ができる" in {
       val day = new DateTime(2014, 12, 6, 0, 0, 0)

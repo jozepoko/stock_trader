@@ -7,7 +7,7 @@ import org.specs2.mutable.Specification
 import org.specs2.specification.{Step, Fragments, AfterExample, BeforeExample}
 import scalikejdbc.{NamedDB, ConnectionPool, LoggingSQLAndTimeSettings}
 
-trait TestBase extends Specification with BeforeExample with AfterExample with Mockito {
+trait Specs2TestBase extends Specification with BeforeExample with AfterExample with Mockito {
   override def before = {}
   override def after = {}
   override def map(fragments: => Fragments) = Step(setup) ^ fragments ^ Step(tearDown)
