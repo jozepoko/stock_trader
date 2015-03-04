@@ -2,10 +2,13 @@ package jozepoko.stock_trader.test
 
 import com.typesafe.config.ConfigFactory
 import java.io.File
+import org.scalatest.FlatSpec
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import org.specs2.specification.{Step, Fragments, AfterExample, BeforeExample}
 import scalikejdbc.{NamedDB, ConnectionPool, LoggingSQLAndTimeSettings}
+
+trait TestBase extends FlatSpec
 
 trait Specs2TestBase extends Specification with BeforeExample with AfterExample with Mockito {
   override def before = {}

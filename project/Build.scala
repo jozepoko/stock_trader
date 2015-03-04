@@ -18,6 +18,7 @@ object Dependencies {
     "org.specs2"              %% "specs2-core"         % "2.4.13" % "test",
     "org.specs2"              %% "specs2-mock"         % "2.4.13" % "test",
     "org.mockito"             % "mockito-core"         % "1.9.5" % "test",
+    "org.scalatest"           % "scalatest_2.11"       % "2.2.4" % "test",
     "commons-io"              % "commons-io"           % "2.4",
     "org.apache.commons"      % "commons-email"        % "1.3.2",
     "org.apache.commons"      % "commons-compress"     % "1.6",
